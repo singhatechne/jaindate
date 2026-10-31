@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ocean Date in Baneswor</title>
+<style>
+:root{--bg:#fff4e6;--ink:#3a2a4d;--card:#ffffff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1630;--ink:#ffe9f3;--card:#2b2145}}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Trebuchet MS","Comic Sans MS",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:12px}
+h1{font-size:clamp(1.1rem,4vw,1.8rem);margin:0;text-align:center}
+#stage{position:relative;width:min(100%,820px);height:min(62vh,460px);border-radius:22px;overflow:hidden;border:4px solid var(--ink);background:#9de0ff}
+.scene{position:absolute;inset:0;opacity:0;transition:opacity .8s;pointer-events:none}
+.scene.on{opacity:1}
+.abs{position:absolute}
+.em{position:absolute;line-height:1;user-select:none}
+/* street */
+#s1{background:linear-gradient(#8fd8ff,#ffe9b0 70%)}
+.sun{left:8%;top:6%;font-size:3.2rem;animation:spin 14s linear infinite}
+.bld{bottom:26%;background:#b86f9b;border-radius:8px 8px 0 0;width:16%}
+.bld i{display:block;height:10px;margin:12px 14%;background:#ffe27a;border-radius:2px;box-shadow:0 22px 0 #ffe27a,0 44px 0 #ffe27a}
+.road{left:0;right:0;bottom:0;height:26%;background:#4a4458}
+.road::after{content:"";position:absolute;left:0;right:0;top:48%;height:6px;background:repeating-linear-gradient(90deg,#fff 0 40px,transparent 40px 80px);animation:dash 1s linear infinite}
+.sign{left:50%;top:8%;transform:translateX(-50%);background:#e64a6b;color:#fff;padding:6px 14px;border-radius:10px;font-weight:bold;box-shadow:0 4px 0 #8b2a42;font-size:clamp(.8rem,2.6vw,1.1rem);white-space:nowrap}
+.clock{right:4%;top:6%;background:#222;color:#7dff9b;font-family:monospace;padding:4px 10px;border-radius:8px;font-size:clamp(.8rem,2.4vw,1.1rem)}
+.bike{bottom:20%;font-size:clamp(3rem,10vw,5rem);animation:bump .35s infinite}
+.rider{position:absolute;left:34%;bottom:46%;font-size:.7em;z-index:1}
+.girl{bottom:22%;left:68%;font-size:clamp(3rem,10vw,5rem);animation:sway 2s ease-in-out infinite}
+.sp{font-size:1.2rem;animation:twinkle 1s infinite}
+.bubble{position:absolute;background:#fff;color:#3a2a4d;border:3px solid #3a2a4d;border-radius:16px;padding:8px 12px;max-width:42%;font-size:clamp(.75rem,2.5vw,1rem);opacity:0;transform:scale(.6);transition:.3s;z-index:5}
+.bubble.on{opacity:1;transform:scale(1)}
+.heart{position:absolute;bottom:30%;font-size:1.6rem;animation:rise 2.4s ease-out forwards;z-index:4}
+/* road to aquarium */
+#s2{background:linear-gradient(#ffb36b,#ff8fb1 60%,#ffd9a0)}
+#s2 .road{height:30%}
+.aq{position:absolute;right:-40%;bottom:30%;background:#2a7fb8;color:#fff;border-radius:14px 14px 0 0;padding:14px 18px;text-align:center;font-weight:bold;font-size:clamp(.8rem,2.6vw,1.1rem);border:3px solid #fff}
+.aq b{display:block;font-size:2rem}
+/* sea */
+#s3{background:linear-gradient(#1bb6e8,#0a4c9c 55%,#061a4d)}
+.fish{position:absolute;left:-15%;font-size:clamp(1.6rem,6vw,3rem);animation:swim linear infinite}
+.fish>span{display:inline-block;animation:wob 1.2s ease-in-out infinite}
+.bub{position:absolute;bottom:-20px;border-radius:50%;border:2px solid #d6f6ff;background:rgba(255,255,255,.25);animation:bubble linear infinite}
+.jelly{animation:float 3s ease-in-out infinite}
+.sand{left:0;right:0;bottom:0;height:16%;background:linear-gradient(#f2d49b,#d9b36b)}
+.title{left:50%;top:5%;transform:translateX(-50%);color:#fff;font-weight:bold;font-size:clamp(1rem,4vw,1.8rem);text-shadow:0 3px 0 #06306e;white-space:nowrap;text-align:center}
+#cap{min-height:2.6em;text-align:center;font-size:clamp(.95rem,3vw,1.2rem);background:var(--card);padding:8px 16px;border-radius:14px;width:min(100%,780px);box-sizing:border-box}
+button{font:inherit;font-weight:bold;font-size:1.1rem;padding:10px 24px;border:3px solid var(--ink);background:#ff6b9d;color:#fff;border-radius:999px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes dash{to{background-position-x:-80px}}
+@keyframes bump{50%{transform:translateY(-4px)}}
+@keyframes sway{50%{transform:rotate(4deg) translateY(-3px)}}
+@keyframes twinkle{50%{opacity:.2;transform:scale(1.4)}}
+@keyframes rise{to{transform:translateY(-140px) scale(1.5);opacity:0}}
+@keyframes swim{to{left:115%}}
+@keyframes wob{50%{transform:translateY(-8px) rotate(6deg)}}
+@keyframes bubble{to{transform:translateY(-480px);opacity:0}}
+@keyframes float{50%{transform:translateY(-20px)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:0s!important}}
+</style>
+</head>
+<body>
+<h1>🌊 The Underworld Ocean Date 💕</h1>
+<div id="stage">
+  <div class="scene on" id="s1">
+    <div class="em sun">☀️</div>
+    <div class="abs bld" style="left:4%;height:38%"><i></i></div>
+    <div class="abs bld" style="left:22%;height:30%;background:#7a8fd1"><i></i></div>
+    <div class="abs bld" style="left:78%;height:42%;background:#e08a5a"><i></i></div>
+    <div class="abs sign">📍 Baneswor Chowk</div>
+    <div class="abs clock">🕐 1:00 PM</div>
+    <div class="abs road"></div>
+    <div class="em girl" id="girl">💃<span class="sp" style="position:absolute;left:-8px;top:0">✨</span><span class="sp" style="position:absolute;right:-6px;top:10px;animation-delay:.5s">✨</span></div>
+    <div class="em bike" id="bike1" style="left:-30%"><span class="rider">🧑‍🦱</span>🏍️</div>
+    <div class="em" id="flower" style="font-size:2rem;opacity:0;z-index:3">💐</div>
+    <div class="bubble" id="bubG" style="left:6%;top:30%"></div>
+    <div class="bubble" id="bubW" style="right:3%;top:30%"></div>
+  </div>
+  <div class="scene" id="s2">
+    <div class="em sun" style="left:70%">🌅</div>
+    <div class="abs road"></div>
+    <div class="aq" id="aq"><b>🐠</b>OCEAN WORLD<br>AQUARIUM</div>
+    <div class="em bike" id="bike2" style="left:5%"><span class="rider" style="left:28%">🧑‍🦱</span><span class="rider" style="left:50%;font-size:.65em">💃</span>🏍️</div>
+  </div>
+  <div class="scene" id="s3">
+    <div class="abs title">🐙 Underworld Ocean Tour 🐙</div>
+    <div class="abs sand"></div>
+    <div class="em jelly" style="left:12%;top:30%;font-size:2.6rem">🪼</div>
+    <div class="em jelly" style="left:80%;top:42%;font-size:2rem;animation-delay:1s">🪼</div>
+    <div class="em" style="left:70%;bottom:10%;font-size:3rem">🐙</div>
+    <div class="em" style="left:6%;bottom:12%;font-size:2.4rem">🐢</div>
+    <div class="em" style="left:30%;bottom:8%;font-size:2rem">🪸</div>
+    <div class="em" style="left:92%;bottom:8%;font-size:2rem">🌿</div>
+    <div id="sea"></div>
+    <div class="em" style="left:40%;bottom:9%;font-size:clamp(2.4rem,8vw,4rem)">🧑‍🦱💃</div>
+    <div class="em" style="left:44%;bottom:30%;font-size:1.8rem;animation:float 2s infinite">💖</div>
+  </div>
+</div>
+<div id="cap">Tap start to begin their date 💫</div>
+<button id="go">▶ Start the date</button>
+<script>
+const $=id=>document.getElementById(id);
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+let run=0;
+function cap(t){$('cap').textContent=t}
+function show(n){['s1','s2','s3'].forEach(s=>$(s).classList.toggle('on',s===n))}
+function say(el,t){el.textContent=t;el.classList.add('on')}
+function hush(){document.querySelectorAll('.bubble').forEach(b=>b.classList.remove('on'))}
+function move(el,css,sec){el.style.transition='all '+sec+'s ease-in-out';Object.assign(el.style,css)}
+function jump(el,css){el.style.transition='none';Object.assign(el.style,css);void el.offsetWidth}
+function hearts(n){for(let i=0;i<n;i++){const h=document.createElement('div');h.className='heart';h.textContent=['💖','💕','💗'][i%3];h.style.left=(55+Math.random()*25)+'%';h.style.animationDelay=(i*.25)+'s';$('s1').appendChild(h);setTimeout(()=>h.remove(),3500)}}
+function buildSea(){
+  const sea=$('sea');sea.innerHTML='';
+  ['🐟','🐠','🐡','🦈','🐬','🐳','🦑','🐟','🐠'].forEach((f,i)=>{
+    const d=document.createElement('div');d.className='fish';
+    d.style.top=(14+(i*9)%52)+'%';
+    d.style.animationDuration=(9+i*2.3)+'s';
+    d.style.animationDelay=(-i*2.5)+'s';
+    d.innerHTML='<span>'+f+'</span>';sea.appendChild(d)});
+  for(let i=0;i<14;i++){
+    const b=document.createElement('div');b.className='bub';
+    const s=6+Math.random()*14;
+    b.style.cssText='left:'+Math.random()*100+'%;width:'+s+'px;height:'+s+'px;animation-duration:'+(4+Math.random()*5)+'s;animation-delay:'+(-Math.random()*6)+'s';
+    sea.appendChild(b)}
+}
+async function play(){
+  const me=++run, ok=()=>me===run;
+  $('go').disabled=true;$('go').textContent='💞 Date in progress…';
+  hush();show('s1');
+  jump($('bike1'),{left:'-30%'});jump($('girl'),{opacity:1,left:'68%'});
+  jump($('flower'),{opacity:0,left:'44%',bottom:'44%',top:'auto',fontSize:'2rem'});
+  jump($('bike2'),{left:'5%'});jump($('aq'),{right:'-40%'});
+  cap('📍 Baneswor, 1:00 PM. She’s waiting, looking gorgeous…');
+  await wait(1500);if(!ok())return;
+  cap('🏍️ Vroom! He’s arriving on his bike…');
+  move($('bike1'),{left:'40%'},3);
+  await wait(3300);if(!ok())return;
+  cap('💐 He pulls out a bouquet…');
+  $('flower').style.opacity=1;
+  await wait(1500);if(!ok())return;
+  move($('flower'),{left:'66%',bottom:'48%'},1.2);
+  cap('🌹 “These are for you.”');
+  await wait(1500);if(!ok())return;
+  say($('bubG'),'Wow… you look stunning today! That dress? Wow. 😍');
+  hearts(6);
+  await wait(3500);if(!ok())return;
+  hush();say($('bubW'),'Aww, you’re so sweet! Let’s go! 🥰');
+  hearts(6);
+  await wait(3000);if(!ok())return;
+  hush();
+  cap('🛵 Hop on! Next stop: the aquarium!');
+  move($('girl'),{left:'46%'},1);
+  await wait(1200);if(!ok())return;
+  $('girl').style.opacity=0;$('flower').style.opacity=0;
+  move($('bike1'),{left:'120%'},2.2);
+  await wait(1800);if(!ok())return;
+  show('s2');
+  cap('🌅 Riding through Kathmandu together…');
+  move($('bike2'),{left:'38%'},5);
+  move($('aq'),{right:'6%'},5);
+  await wait(5600);if(!ok())return;
+  cap('🐠 Ocean World Aquarium! Tickets in hand…');
+  await wait(2200);if(!ok())return;
+  buildSea();show('s3');
+  cap('🌊 Welcome to the underworld ocean! Sharks, jellies, and a very shy octopus…');
+  await wait(7000);if(!ok())return;
+  cap('💖 Best. Date. Ever. — The End');
+  $('go').disabled=false;$('go').textContent='🔁 Replay the date';
+}
+$('go').onclick=play;
+</script>
+</body>
+</html>
